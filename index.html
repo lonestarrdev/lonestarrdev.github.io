@@ -7,37 +7,88 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Hari G</h1>
-    <p>MSEE Student | VLSI | Circuit Design</p>
+  <nav class="navbar">
+    <div class="nav-name">Hari G</div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <p class="hero-tag">MSEE Student | VLSI | Circuit Design</p>
+    <h1>Designing hardware with an interest in VLSI, digital systems, and semiconductor engineering.</h1>
+    <p class="hero-description">
+      I'm a graduate electrical engineering student building projects in ASIC design,
+      digital logic, layout, verification, and mixed-signal systems.
+    </p>
+    <div class="hero-buttons">
+      <a class="button primary" href="resume.pdf" target="_blank">View Resume</a>
+      <a class="button secondary" href="https://github.com/yourusername" target="_blank">GitHub</a>
+      <a class="button secondary" href="https://linkedin.com/in/your-linkedin" target="_blank">LinkedIn</a>
+    </div>
   </header>
 
-  <section>
-    <h2>About Me</h2>
-    <p>
-      I’m an MSEE student interested in VLSI, digital design, and semiconductor engineering.
-    </p>
-  </section>
+  <main class="container">
+    <section id="about" class="section">
+      <h2>About</h2>
+      <p>
+        I’m an MSEE student focused on VLSI, digital design, and circuit-level engineering.
+        My interests include RTL design, verification, physical implementation, and
+        mixed-signal systems. I enjoy building projects that connect architecture, circuit
+        design, and practical hardware implementation.
+      </p>
+    </section>
 
-  <section>
-    <h2>Projects</h2>
-    <ul>
-      <li>64-tap FIR Filter Design</li>
-      <li>Two-Stage OTA Design</li>
-      <li>Custom SRAM Design</li>
-    </ul>
-  </section>
+    <section id="projects" class="section">
+      <h2>Projects</h2>
+      <div class="project-grid">
+        <div class="project-card">
+          <h3>64-Tap FIR Filter</h3>
+          <p>
+            Designed a digital FIR filter system with supporting datapath and control logic.
+          </p>
+        </div>
 
-  <section>
-    <h2>Resume</h2>
-    <p><a href="resume.pdf" target="_blank">View my resume</a></p>
-  </section>
+        <div class="project-card">
+          <h3>Two-Stage OTA</h3>
+          <p>
+            Designed and analyzed a two-stage operational transconductance amplifier under power and stability constraints.
+          </p>
+        </div>
 
-  <section>
-    <h2>Contact</h2>
-    <p>Email: your-email@example.com</p>
-    <p>GitHub: github.com/yourusername</p>
-    <p>LinkedIn: linkedin.com/in/your-linkedin</p>
-  </section>
+        <div class="project-card">
+          <h3>Custom SRAM Design</h3>
+          <p>
+            Built and analyzed a custom SRAM structure including array organization and peripheral circuitry.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <h2>Skills</h2>
+      <div class="skills-list">
+        <span>Verilog</span>
+        <span>SystemVerilog</span>
+        <span>Cadence Virtuoso</span>
+        <span>Spectre</span>
+        <span>ASIC Design</span>
+        <span>FPGA</span>
+        <span>Layout</span>
+        <span>Timing Analysis</span>
+        <span>Mixed-Signal Design</span>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Contact</h2>
+      <p>Email: your-email@example.com</p>
+      <p>GitHub: github.com/yourusername</p>
+      <p>LinkedIn: linkedin.com/in/your-linkedin</p>
+    </section>
+  </main>
 </body>
 </html>
