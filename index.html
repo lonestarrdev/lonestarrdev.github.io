@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hariharan Gopal — VLSI & Silicon</title>
-<meta name="description" content="Hariharan Gopal — VLSI engineer. MS EE at Columbia University, specializing in physical design and post-silicon validation.">
+<title>Hariharan Gopal · VLSI & Silicon</title>
+<meta name="description" content="Hariharan Gopal, VLSI engineer. MS EE at Columbia University, specializing in physical design and post-silicon validation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
@@ -80,10 +80,19 @@
     margin-bottom: 40px;
   }
   h1 em { font-style: italic; color: var(--brass); }
+  .type-word { color: var(--brass); }
+  .cursor {
+    display: inline-block; width: 3px; height: 0.8em;
+    background: var(--brass); margin-left: 3px;
+    vertical-align: baseline;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
   .hero-sub { max-width: 560px; color: var(--muted); font-size: 18px; margin-bottom: 64px; }
   .hero-sub strong { color: var(--text); font-weight: 500; }
 
-  /* Dotted-leader index — the signature */
+  /* Dotted-leader index: the signature */
   .index { max-width: 560px; }
   .index a {
     display: flex; align-items: baseline; gap: 12px;
@@ -228,12 +237,34 @@
 
   /* ---------- Mobile ---------- */
   @media (max-width: 720px) {
-    header { padding: 70px 0 60px; }
+    .wrap { padding: 0 20px; }
+    header { padding: 64px 0 50px; }
     .about-grid, .projects, .skills-grid, .card-gallery { grid-template-columns: 1fr; }
-    .job { grid-template-columns: 1fr; gap: 6px; }
-    .nav-links { gap: 18px; }
-    .nav-links a:nth-child(n+4) { display: none; }
+    .about-grid { gap: 40px; }
+    .job { grid-template-columns: 1fr; gap: 6px; padding: 24px 0; }
+    .nav-inner { padding: 16px 20px; }
+    .nav-links { gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav-links a { font-size: 13px; }
+    section { padding: 64px 0; }
+    h2 { font-size: 28px; margin-bottom: 32px; }
+    .card { padding: 22px; }
+    .card-img { width: calc(100% + 44px); margin: -22px 0 8px -22px; }
+    .card.wide .card-img { max-height: 220px; }
+    .projects { gap: 16px; }
+    .skills-grid { gap: 28px; }
+    .socials { gap: 20px; }
     footer { flex-direction: column; gap: 8px; }
+  }
+
+  @media (max-width: 420px) {
+    .wrap { padding: 0 16px; }
+    header { padding: 52px 0 42px; }
+    .eyebrow { font-size: 11px; }
+    .hero-sub { font-size: 16px; margin-bottom: 48px; }
+    .index a { font-size: 15px; padding: 11px 0; }
+    .nav-name { font-size: 12px; }
+    .card { padding: 18px; }
+    .card-img { width: calc(100% + 36px); margin: -18px 0 8px -18px; }
   }
 </style>
 </head>
@@ -253,11 +284,11 @@
 </nav>
 
 <header class="wrap">
-  <p class="eyebrow">VLSI · Physical Design · Post-Silicon Validation</p>
-  <h1>Hariharan Gopal,<br>from RTL to <em>silicon</em>.</h1>
+  <p class="eyebrow">vlsi · physical design · post-silicon validation</p>
+  <h1>hi. i'm Hari.<br>i build <span id="type-word" class="type-word">things</span><span class="cursor" aria-hidden="true"></span>.</h1>
   <p class="hero-sub">
-    MS in Electrical Engineering at <strong>Columbia University</strong>, specializing
-    in VLSI. Currently validating 500Gb/s+ optical I/O silicon as a
+    MS EE at <strong>Columbia University</strong>, focused on VLSI. Currently
+    validating 500Gb/s+ optical I/O silicon as a
     <strong>Post-Silicon Validation Intern at Ayar Labs</strong>.
   </p>
 
@@ -274,7 +305,7 @@
   <h2><span class="sec-num">01</span>About me</h2>
   <div class="about-grid">
     <div>
-      <p>I'm a chip designer who likes owning the whole journey — architecting
+      <p>I'm a chip designer who likes owning the whole journey: architecting
       RTL, pushing it through synthesis and place-and-route, closing timing,
       and then standing at the bench validating the silicon that comes back.
       My work spans the full RTL-to-GDSII flow with DRC/LVS-clean tapeouts
@@ -287,7 +318,7 @@
     </div>
     <dl class="facts">
       <dt>Currently</dt><dd>Post-Silicon Validation Intern, Ayar Labs</dd>
-      <dt>Graduating</dt><dd>December 2026 — MS EE, Columbia University</dd>
+      <dt>Graduating</dt><dd>December 2026, MS EE, Columbia University</dd>
       <dt>Previously</dt><dd>BS EE with Honors, UIUC</dd>
       <dt>Résumé</dt><dd><a href="resume.pdf">Download PDF ↗</a></dd>
     </dl>
@@ -298,12 +329,12 @@
   <h2><span class="sec-num">02</span>Where I've worked</h2>
 
   <div class="job">
-    <div class="job-when">May 2026 — Now</div>
+    <div class="job-when">May 2026 - Now</div>
     <div>
       <h3>Ayar Labs</h3>
       <p class="role">Post-Silicon Validation Intern</p>
       <p>Proposed a time-interleaved multi-ADC sampling scheme that cut a
-      hardware-limited 15.8 ms conversion rate to ~1 ms — a 16× speedup —
+      hardware-limited 15.8 ms conversion rate to ~1 ms (a 16× speedup),
       enabling finer capture of thermal transients in ring resonator
       characterization.</p>
       <p>Built a new Rx test station and calibration infrastructure for
@@ -315,7 +346,7 @@
   </div>
 
   <div class="job">
-    <div class="job-when">May — Aug 2023</div>
+    <div class="job-when">May - Aug 2023</div>
     <div>
       <h3>TibaRay Inc.</h3>
       <p class="role">Board Development & RTL Intern</p>
@@ -323,7 +354,7 @@
       functions) in C and SystemVerilog, driving a 75% efficiency boost for
       future testing. Redesigned magnetron circuit board schematics and
       layouts in Eagle with long-line impedance matching and signal integrity
-      analysis — approved by the CTO for final production.</p>
+      analysis, approved by the CTO for final production.</p>
     </div>
   </div>
 </section>
@@ -334,27 +365,27 @@
 
     <a class="card wide" href="#">
       <img class="card-img fit" src="assets/fft-top-level.png" alt="Top-level post-APR layout of the 1024-point FFT engine showing the SRAM banks and standard-cell logic" loading="lazy">
-      <span class="img-note">Top-level layout — SRAM ping-pong banks flanking the logic spine (TSMC N65)</span>
-      <h3>1024-Point FFT Engine — RTL to DRC/LVS-Clean Sign-off</h3>
+      <span class="img-note">Top-level layout: SRAM ping-pong banks flanking the logic spine (TSMC N65)</span>
+      <h3>1024-Point FFT Engine: RTL to DRC/LVS-Clean Sign-off</h3>
       <span class="stat">208.7 MHz post-APR · 0.41 mm² · 5.49 pJ/sample · 70.6 dB SQNR</span>
       <p>Memory-based radix-2 engine in Verilog built around four data SRAMs
-      organized as two complex ping-pong banks — one bank sources each FFT
+      organized as two complex ping-pong banks: one bank sources each FFT
       stage while the other receives, letting a single butterfly datapath
       serve all ten stages (5,120 butterflies per 1024-point frame). Closed
       all setup/hold violations by adding register staging between the
       controller/address-generation logic and the memory interface, verified
       in PrimeTime STA. Post-APR power was signed off with full VCD activity
-      annotation — 13,696 of 13,696 nets — and spectral accuracy was
+      annotation (13,696 of 13,696 nets), and spectral accuracy was
       validated across ten frames against a floating-point golden model
       (Q1.15 in, Q9.7 out), holding sub-0.15% NRMSE per frame.</p>
       <div class="card-gallery">
         <figure>
           <img src="assets/fft-mag-phase.png" alt="Magnitude and phase spectrum comparison between the RTL output and floating-point golden model" loading="lazy">
-          <span class="img-note">RTL vs. golden model — magnitude &amp; phase spectra</span>
+          <span class="img-note">RTL vs. golden model: magnitude &amp; phase spectra</span>
         </figure>
         <figure>
           <img src="assets/fft-drc-signoff.jpg" alt="Top-level layout with clean DRC results in Cadence Innovus" loading="lazy">
-          <span class="img-note">DRC-clean sign-off — Calibre RVE</span>
+          <span class="img-note">DRC-clean sign-off: Calibre RVE</span>
         </figure>
       </div>
       <div class="tags"><span>TSMC N65</span><span>Verilog</span><span>Innovus</span><span>PrimeTime</span><span>DRC/LVS clean</span></div>
@@ -362,7 +393,7 @@
 
     <a class="card wide" href="#">
       <img class="card-img" src="assets/adder-layout.jpg" alt="Layout of the 8-bit ripple-carry adder chain in Cadence Virtuoso" loading="lazy">
-      <span class="img-note">8-bit adder chain layout — Cadence Virtuoso</span>
+      <span class="img-note">8-bit adder chain layout: Cadence Virtuoso</span>
       <h3>8-bit Processor ASIC</h3>
       <span class="stat">&gt;112 MHz target exceeded · transistor-level signoff</span>
       <p>Full-custom accumulator-based core designed and laid out at the
@@ -397,7 +428,7 @@
       <ul>
         <li>RTL-to-GDSII · synthesis · floorplanning</li>
         <li>PnR · CTS / post-CTS optimization</li>
-        <li>STA — corners, margins, derates</li>
+        <li>STA: corners, margins, derates</li>
         <li>DRC/LVS signoff · LEC verification</li>
         <li>PI/SI analysis · PPA trade-offs · DFT (Scan, LBIST)</li>
       </ul>
@@ -436,6 +467,39 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Typewriter effect on the hero "i build ___" word
+  const typeEl = document.getElementById('type-word');
+  const words = ['things', 'RTL', 'Verilog', 'drones', 'optics', 'chips', 'circuits'];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (typeEl && !reduceMotion) {
+    let wordIndex = 0, charIndex = 0, deleting = false;
+
+    const tick = () => {
+      const current = words[wordIndex];
+      if (!deleting) {
+        charIndex++;
+        typeEl.textContent = current.slice(0, charIndex);
+        if (charIndex === current.length) {
+          deleting = true;
+          setTimeout(tick, 1400);
+          return;
+        }
+      } else {
+        charIndex--;
+        typeEl.textContent = current.slice(0, charIndex);
+        if (charIndex === 0) {
+          deleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+        }
+      }
+      setTimeout(tick, deleting ? 45 : 90);
+    };
+
+    typeEl.textContent = '';
+    tick();
+  }
 </script>
 
 </body>
