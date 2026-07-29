@@ -17,6 +17,7 @@
     --muted: #8a8f9c;
     --brass: #c9a96a;
     --brass-dim: #c9a96a99;
+    --fun: #7fd9b8;
     --max: 960px;
   }
 
@@ -141,10 +142,32 @@
   .job { display: grid; grid-template-columns: 170px 1fr; gap: 32px; padding: 30px 0; border-bottom: 1px dotted var(--line-solid); }
   .job:last-child { border-bottom: none; }
   .job-when { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); padding-top: 4px; }
-  .job h3 { font-size: 19px; font-weight: 600; }
+  .job h3 { font-size: 19px; font-weight: 600; display: flex; align-items: center; flex-wrap: wrap; }
+  .job-logo { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; margin-right: 10px; }
   .job .role { color: var(--brass); font-size: 15px; margin-bottom: 8px; }
   .job p { color: var(--muted); font-size: 16px; }
   .job p + p { margin-top: 8px; }
+
+  /* Job easter egg: reveals after lingering on this entry for a while */
+  .job-egg {
+    display: inline-block;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin-left: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--fun);
+    transition: max-width 0.9s ease, opacity 0.6s ease 0.15s, margin-left 0.9s ease;
+  }
+  .job-egg.show { max-width: 320px; opacity: 1; margin-left: 12px; }
+  @media (prefers-reduced-motion: reduce) {
+    .job-egg { transition: opacity 0.3s ease; }
+    .job-egg.show { max-width: 320px; }
+  }
 
   /* Projects */
   .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -332,6 +355,7 @@
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
       <a href="#contact">Contact</a>
+      <a href="fun.html">Fun</a>
     </div>
   </div>
 </nav>
@@ -384,7 +408,7 @@
   <div class="job">
     <div class="job-when">May 2026 - Now</div>
     <div>
-      <h3>Ayar Labs</h3>
+      <h3><img class="job-logo" src="assets/Ayar_Labs_icon_RGB.png" alt="" loading="lazy"><span>Ayar Labs</span><span class="job-egg">cool aritzia hoodie merch too!</span></h3>
       <p class="role">Post-Silicon Validation Intern</p>
       <p>Proposed a time-interleaved multi-ADC sampling scheme that cut a
       hardware-limited 15.8 ms conversion rate to ~1 ms (a 16× speedup),
@@ -401,7 +425,7 @@
   <div class="job">
     <div class="job-when">May - Aug 2023</div>
     <div>
-      <h3>TibaRay Inc.</h3>
+      <h3><img class="job-logo" src="assets/tibaray-icon.png" alt="" loading="lazy"><span>TibaRay Inc.</span><span class="job-egg">fun sandwich shop nearby!</span></h3>
       <p class="role">Board Development & RTL Intern</p>
       <p>Implemented peripheral RTL (SPI/I²C communication and debug
       functions) in C and SystemVerilog, driving a 75% efficiency boost for
@@ -500,8 +524,8 @@
 <section id="contact" class="wrap reveal">
   <h2><span class="sec-num">05</span>Get in touch</h2>
   <p class="contact-line">
-    Interested in VLSI, silicon validation, or a Dec 2026 grad?
-    <a href="mailto:hg2775@columbia.edu">Email me</a>.
+    wanna talk? or just have some good coffee.
+    <a href="mailto:hg2775@columbia.edu">email me</a>.
   </p>
   <div class="socials">
     <a href="https://www.linkedin.com/in/hrgopal">LINKEDIN</a>
@@ -523,7 +547,7 @@
 
   // Typewriter effect on the hero "i build ___" word
   const typeEl = document.getElementById('type-word');
-  const words = ['things', 'RTL', 'Verilog', 'drones', 'optics', 'chips', 'circuits'];
+  const words = ['things', 'RTL', 'Verilog', 'drones', 'optics', 'chips', 'circuits', 'legos'];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (typeEl && !reduceMotion) {
@@ -553,6 +577,27 @@
     typeEl.textContent = '';
     tick();
   }
+
+  // Job easter eggs: reveal only after lingering on that entry for a while
+  const EGG_DWELL_MS = 2000;
+  document.querySelectorAll('.job').forEach(job => {
+    const egg = job.querySelector('.job-egg');
+    if (!egg) return;
+    let timer = null;
+    const jobIo = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (!timer && !egg.classList.contains('show')) {
+            timer = setTimeout(() => { egg.classList.add('show'); }, EGG_DWELL_MS);
+          }
+        } else if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+      });
+    }, { threshold: 0.6 });
+    jobIo.observe(job);
+  });
 </script>
 
 </body>

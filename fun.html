@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun &middot; Hariharan Gopal</title>
+<meta name="description" content="Off-the-clock stuff: pics and videos, no VLSI required.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0e13;
+    --surface: #13161e;
+    --line-solid: #232732;
+    --text: #e8e6e1;
+    --muted: #8a8f9c;
+    --brass: #c9a96a;
+    --brass-dim: #c9a96a99;
+    --fun: #7fd9b8;
+    --max: 960px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--fun); color: var(--bg); }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--fun); outline-offset: 3px; border-radius: 2px; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line-solid); }
+  .nav-inner { max-width: var(--max); margin: 0 auto; padding: 18px 24px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .back-link { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); transition: color .2s; }
+  .back-link:hover { color: var(--fun); }
+  .nav-name { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.08em; color: var(--muted); }
+
+  header { padding: 64px 0 48px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fun); margin-bottom: 18px; }
+  h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(40px, 7vw, 68px); line-height: 1.05; margin-bottom: 16px; }
+  header p { max-width: 520px; color: var(--muted); font-size: 17px; }
+
+  main { padding-bottom: 90px; }
+  .fun-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .fun-item { background: var(--surface); border: 1px solid var(--line-solid); border-radius: 8px; overflow: hidden; transition: border-color 0.25s, transform 0.25s; }
+  .fun-item:hover { border-color: var(--fun); transform: translateY(-3px); }
+  .fun-item img, .fun-item video { width: 100%; display: block; aspect-ratio: 1 / 1; object-fit: cover; background: #000; }
+  .fun-item .cap { padding: 10px 14px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
+
+  .empty-state {
+    border: 1px dashed var(--line-solid); border-radius: 10px;
+    padding: 60px 24px; text-align: center; color: var(--muted);
+  }
+  .empty-state p { max-width: 420px; margin: 0 auto; font-size: 15px; }
+  .empty-state .eyebrow { color: var(--fun); }
+
+  footer { border-top: 1px solid var(--line-solid); padding: 30px 0 40px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+
+  @media (max-width: 720px) {
+    .wrap { padding: 0 20px; }
+    header { padding: 48px 0 36px; }
+    .fun-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    footer { flex-direction: column; gap: 8px; }
+  }
+  @media (max-width: 420px) {
+    .wrap { padding: 0 16px; }
+    .fun-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="back-link" href="index.html">&larr; back to portfolio</a>
+    <span class="nav-name">H. GOPAL</span>
+  </div>
+</nav>
+
+<header class="wrap">
+  <p class="eyebrow">off the clock</p>
+  <h1>just for fun.</h1>
+  <p>No VLSI in here. Just stuff I like.</p>
+</header>
+
+<main class="wrap">
+  <div class="fun-grid" id="fun-grid"></div>
+  <div class="empty-state" id="empty-state" hidden>
+    <p class="eyebrow">nothing here yet</p>
+    <p>Check back soon: this tab is just waiting for pics and clips to land in it.</p>
+  </div>
+</main>
+
+<footer class="wrap">
+  <span>&copy; 2026 Hariharan Gopal</span>
+  <span>Columbia University &middot; New York</span>
+</footer>
+
+<script>
+  // To add something: drop the file in assets/fun/, then add one entry below.
+  // type: 'image' or 'video'. caption is optional: omit or leave "" to skip it.
+  const MEDIA = [
+    { type: 'image', src: 'assets/fun/img-2891.jpg', caption: '' },
+    { type: 'image', src: 'assets/fun/img-6321.jpg', caption: '' },
+    { type: 'video', src: 'assets/fun/img-6539.mp4', caption: '' },
+  ];
+
+  const grid = document.getElementById('fun-grid');
+  const emptyState = document.getElementById('empty-state');
+
+  if (MEDIA.length === 0) {
+    emptyState.hidden = false;
+  } else {
+    MEDIA.forEach(item => {
+      const cell = document.createElement('div');
+      cell.className = 'fun-item';
+      const media = item.type === 'video'
+        ? Object.assign(document.createElement('video'), { src: item.src, controls: true, playsInline: true, preload: 'metadata' })
+        : Object.assign(document.createElement('img'), { src: item.src, alt: item.caption || '', loading: 'lazy' });
+      cell.appendChild(media);
+      if (item.caption) {
+        const cap = document.createElement('div');
+        cap.className = 'cap';
+        cap.textContent = item.caption;
+        cell.appendChild(cap);
+      }
+      grid.appendChild(cell);
+    });
+  }
+</script>
+
+</body>
+</html>

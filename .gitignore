@@ -1,0 +1,5 @@
+# Raw camera originals — keep the web-optimized versions (jpg/mp4) only
+assets/fun/*.HEIC
+assets/fun/*.heic
+assets/fun/*.mov
+assets/fun/*.MOV
