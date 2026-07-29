@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hariharan Gopal — VLSI & Silicon</title>
+<meta name="description" content="Hariharan Gopal — VLSI engineer. MS EE at Columbia University, specializing in physical design and post-silicon validation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0e13;
+    --surface: #13161e;
+    --line-solid: #232732;
+    --text: #e8e6e1;
+    --muted: #8a8f9c;
+    --brass: #c9a96a;
+    --brass-dim: #c9a96a99;
+    --max: 960px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--brass); color: var(--bg); }
+
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line-solid);
+  }
+  .nav-inner {
+    max-width: var(--max); margin: 0 auto; padding: 18px 24px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .nav-name { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.08em; color: var(--muted); }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 14px; color: var(--muted); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--brass); }
+
+  /* ---------- Hero: the index ---------- */
+  header { padding: 100px 0 90px; }
+  .eyebrow {
+    font-family: 'Space Mono', monospace; font-size: 12px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--brass);
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(48px, 8.5vw, 96px);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    margin-bottom: 40px;
+  }
+  h1 em { font-style: italic; color: var(--brass); }
+  .hero-sub { max-width: 560px; color: var(--muted); font-size: 18px; margin-bottom: 64px; }
+  .hero-sub strong { color: var(--text); font-weight: 500; }
+
+  /* Dotted-leader index — the signature */
+  .index { max-width: 560px; }
+  .index a {
+    display: flex; align-items: baseline; gap: 12px;
+    padding: 13px 0;
+    font-size: 16px;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+  .index a:hover { color: var(--brass); }
+  .index a:hover .leader { border-color: var(--brass-dim); }
+  .index .leader {
+    flex: 1;
+    border-bottom: 1px dotted var(--line-solid);
+    transform: translateY(-4px);
+    transition: border-color 0.2s;
+  }
+  .index .num { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); }
+
+  /* ---------- Sections ---------- */
+  section { padding: 90px 0; border-top: 1px solid var(--line-solid); }
+  h2 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 36px;
+    margin-bottom: 48px;
+  }
+  h2 .sec-num {
+    font-family: 'Space Mono', monospace; font-size: 13px;
+    color: var(--brass); vertical-align: super; margin-right: 10px;
+  }
+
+  /* About */
+  .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; }
+  .about-grid p + p { margin-top: 18px; }
+  .facts { font-size: 15px; }
+  .facts dt {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--brass); margin-top: 22px;
+  }
+  .facts dt:first-child { margin-top: 0; }
+  .facts dd { color: var(--muted); margin-top: 4px; }
+  .facts dd a { color: var(--brass); }
+
+  /* Experience */
+  .job { display: grid; grid-template-columns: 170px 1fr; gap: 32px; padding: 30px 0; border-bottom: 1px dotted var(--line-solid); }
+  .job:last-child { border-bottom: none; }
+  .job-when { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); padding-top: 4px; }
+  .job h3 { font-size: 19px; font-weight: 600; }
+  .job .role { color: var(--brass); font-size: 15px; margin-bottom: 8px; }
+  .job p { color: var(--muted); font-size: 16px; }
+  .job p + p { margin-top: 8px; }
+
+  /* Projects */
+  .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line-solid);
+    padding: 30px;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  .card:hover { border-color: var(--brass-dim); transform: translateY(-3px); }
+  .card-img {
+    width: calc(100% + 60px);
+    margin: -30px 0 8px -30px;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    border-bottom: 1px solid var(--line-solid);
+    max-height: 260px;
+  }
+  .card.wide .card-img { max-height: 360px; }
+  .card-img.fit { object-fit: contain; background: #000; padding: 16px 0; }
+  .card-gallery {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-top: 4px;
+  }
+  .card-gallery figure { margin: 0; }
+  .card-gallery img {
+    width: 100%; display: block;
+    border: 1px solid var(--line-solid);
+  }
+  .card-gallery .img-note { display: block; margin-top: 7px; }
+  .img-note {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .card h3 { font-size: 19px; font-weight: 600; }
+  .card .stat {
+    font-family: 'Space Mono', monospace; font-size: 12px;
+    color: var(--brass); letter-spacing: 0.04em;
+  }
+  .card p { color: var(--muted); font-size: 15px; flex: 1; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tags span {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--muted); border: 1px solid var(--line-solid);
+    padding: 3px 10px; border-radius: 100px;
+  }
+  .card.wide { grid-column: 1 / -1; }
+
+  /* Skills */
+  .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+  .skill-col h3 {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--brass); margin-bottom: 16px; font-weight: 400;
+  }
+  .skill-col ul { list-style: none; }
+  .skill-col li {
+    color: var(--muted); font-size: 15px; padding: 7px 0;
+    border-bottom: 1px dotted var(--line-solid);
+  }
+  .skill-col li:last-child { border-bottom: none; }
+
+  /* Contact */
+  .contact-line {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(30px, 5vw, 48px);
+    line-height: 1.2;
+    max-width: 720px;
+  }
+  .contact-line a { border-bottom: 1px solid var(--brass-dim); transition: color 0.2s; }
+  .contact-line a:hover { color: var(--brass); }
+  .socials { margin-top: 44px; display: flex; gap: 26px; }
+  .socials a { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); transition: color 0.2s; }
+  .socials a:hover { color: var(--brass); }
+
+  footer {
+    border-top: 1px solid var(--line-solid);
+    padding: 30px 0 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    display: flex; justify-content: space-between;
+  }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 720px) {
+    header { padding: 70px 0 60px; }
+    .about-grid, .projects, .skills-grid, .card-gallery { grid-template-columns: 1fr; }
+    .job { grid-template-columns: 1fr; gap: 6px; }
+    .nav-links { gap: 18px; }
+    .nav-links a:nth-child(n+4) { display: none; }
+    footer { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-name">H. GOPAL</span>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="wrap">
+  <p class="eyebrow">VLSI · Physical Design · Post-Silicon Validation</p>
+  <h1>Hariharan Gopal,<br>from RTL to <em>silicon</em>.</h1>
+  <p class="hero-sub">
+    MS in Electrical Engineering at <strong>Columbia University</strong>, specializing
+    in VLSI. Currently validating 500Gb/s+ optical I/O silicon as a
+    <strong>Post-Silicon Validation Intern at Ayar Labs</strong>.
+  </p>
+
+  <div class="index" aria-label="Page index">
+    <a href="#about"><span>About me</span><span class="leader"></span><span class="num">01</span></a>
+    <a href="#experience"><span>Where I've worked</span><span class="leader"></span><span class="num">02</span></a>
+    <a href="#projects"><span>Silicon I've built</span><span class="leader"></span><span class="num">03</span></a>
+    <a href="#skills"><span>Tools & flow</span><span class="leader"></span><span class="num">04</span></a>
+    <a href="#contact"><span>Get in touch</span><span class="leader"></span><span class="num">05</span></a>
+  </div>
+</header>
+
+<section id="about" class="wrap reveal">
+  <h2><span class="sec-num">01</span>About me</h2>
+  <div class="about-grid">
+    <div>
+      <p>I'm a chip designer who likes owning the whole journey — architecting
+      RTL, pushing it through synthesis and place-and-route, closing timing,
+      and then standing at the bench validating the silicon that comes back.
+      My work spans the full RTL-to-GDSII flow with DRC/LVS-clean tapeouts
+      in TSMC N65, and hands-on optoelectronic test infrastructure for
+      cutting-edge optical interconnects.</p>
+      <p>I completed my BS in Electrical Engineering with Honors at the
+      University of Illinois Urbana-Champaign, and I'm now finishing my MS at
+      Columbia with coursework in VLSI Design, Advanced Digital Design,
+      Analog-Digital Circuits, and Digital Systems.</p>
+    </div>
+    <dl class="facts">
+      <dt>Currently</dt><dd>Post-Silicon Validation Intern, Ayar Labs</dd>
+      <dt>Graduating</dt><dd>December 2026 — MS EE, Columbia University</dd>
+      <dt>Previously</dt><dd>BS EE with Honors, UIUC</dd>
+      <dt>Résumé</dt><dd><a href="resume.pdf">Download PDF ↗</a></dd>
+    </dl>
+  </div>
+</section>
+
+<section id="experience" class="wrap reveal">
+  <h2><span class="sec-num">02</span>Where I've worked</h2>
+
+  <div class="job">
+    <div class="job-when">May 2026 — Now</div>
+    <div>
+      <h3>Ayar Labs</h3>
+      <p class="role">Post-Silicon Validation Intern</p>
+      <p>Proposed a time-interleaved multi-ADC sampling scheme that cut a
+      hardware-limited 15.8 ms conversion rate to ~1 ms — a 16× speedup —
+      enabling finer capture of thermal transients in ring resonator
+      characterization.</p>
+      <p>Built a new Rx test station and calibration infrastructure for
+      repeatable optoelectronic testing and TDECQ characterization in
+      500Gb/s+ SerDes, and characterized polarization-dependent loss and
+      effective responsivity of the TeraPHY Rx subsystem, delivering
+      validated metrics directly to the design team ahead of tapeout.</p>
+    </div>
+  </div>
+
+  <div class="job">
+    <div class="job-when">May — Aug 2023</div>
+    <div>
+      <h3>TibaRay Inc.</h3>
+      <p class="role">Board Development & RTL Intern</p>
+      <p>Implemented peripheral RTL (SPI/I²C communication and debug
+      functions) in C and SystemVerilog, driving a 75% efficiency boost for
+      future testing. Redesigned magnetron circuit board schematics and
+      layouts in Eagle with long-line impedance matching and signal integrity
+      analysis — approved by the CTO for final production.</p>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="wrap reveal">
+  <h2><span class="sec-num">03</span>Silicon I've built</h2>
+  <div class="projects">
+
+    <a class="card wide" href="#">
+      <img class="card-img fit" src="assets/fft-top-level.png" alt="Top-level post-APR layout of the 1024-point FFT engine showing the SRAM banks and standard-cell logic" loading="lazy">
+      <span class="img-note">Top-level layout — SRAM ping-pong banks flanking the logic spine (TSMC N65)</span>
+      <h3>1024-Point FFT Engine — RTL to DRC/LVS-Clean Sign-off</h3>
+      <span class="stat">208.7 MHz post-APR · 0.41 mm² · 5.49 pJ/sample · 70.6 dB SQNR</span>
+      <p>Memory-based radix-2 engine in Verilog built around four data SRAMs
+      organized as two complex ping-pong banks — one bank sources each FFT
+      stage while the other receives, letting a single butterfly datapath
+      serve all ten stages (5,120 butterflies per 1024-point frame). Closed
+      all setup/hold violations by adding register staging between the
+      controller/address-generation logic and the memory interface, verified
+      in PrimeTime STA. Post-APR power was signed off with full VCD activity
+      annotation — 13,696 of 13,696 nets — and spectral accuracy was
+      validated across ten frames against a floating-point golden model
+      (Q1.15 in, Q9.7 out), holding sub-0.15% NRMSE per frame.</p>
+      <div class="card-gallery">
+        <figure>
+          <img src="assets/fft-mag-phase.png" alt="Magnitude and phase spectrum comparison between the RTL output and floating-point golden model" loading="lazy">
+          <span class="img-note">RTL vs. golden model — magnitude &amp; phase spectra</span>
+        </figure>
+        <figure>
+          <img src="assets/fft-drc-signoff.jpg" alt="Top-level layout with clean DRC results in Cadence Innovus" loading="lazy">
+          <span class="img-note">DRC-clean sign-off — Calibre RVE</span>
+        </figure>
+      </div>
+      <div class="tags"><span>TSMC N65</span><span>Verilog</span><span>Innovus</span><span>PrimeTime</span><span>DRC/LVS clean</span></div>
+    </a>
+
+    <a class="card wide" href="#">
+      <img class="card-img" src="assets/adder-layout.jpg" alt="Layout of the 8-bit ripple-carry adder chain in Cadence Virtuoso" loading="lazy">
+      <span class="img-note">8-bit adder chain layout — Cadence Virtuoso</span>
+      <h3>8-bit Processor ASIC</h3>
+      <span class="stat">&gt;112 MHz target exceeded · transistor-level signoff</span>
+      <p>Full-custom accumulator-based core designed and laid out at the
+      transistor level with Sadiq Sobur: transmission-gate D-latch registers,
+      an 8-bit ripple-carry adder with XOR-conditioned two's-complement
+      subtract, a three-stage logarithmic shifter, an 8×8 SRAM behind a row
+      decoder and column mux, and a pseudo-NMOS PLA controller decoding a
+      6-bit instruction word. Two-phase φ1/φ2 clocking with a balanced buffer
+      tree and a bitslice floorplan; verified with Spectre and PrimeTime
+      signoff STA.</p>
+      <div class="tags"><span>TSMC N65</span><span>Virtuoso</span><span>Spectre</span><span>Full custom</span></div>
+    </a>
+
+  </div>
+</section>
+
+<section id="skills" class="wrap reveal">
+  <h2><span class="sec-num">04</span>Tools & flow</h2>
+  <div class="skills-grid">
+    <div class="skill-col">
+      <h3>EDA / FPGA Tools</h3>
+      <ul>
+        <li>Cadence Virtuoso · Innovus · Conformal</li>
+        <li>Synopsys PrimeTime</li>
+        <li>Mentor Calibre</li>
+        <li>ModelSim · Spectre · UltraSim</li>
+        <li>Vivado · Quartus · KiCad</li>
+      </ul>
+    </div>
+    <div class="skill-col">
+      <h3>Physical Design Flow</h3>
+      <ul>
+        <li>RTL-to-GDSII · synthesis · floorplanning</li>
+        <li>PnR · CTS / post-CTS optimization</li>
+        <li>STA — corners, margins, derates</li>
+        <li>DRC/LVS signoff · LEC verification</li>
+        <li>PI/SI analysis · PPA trade-offs · DFT (Scan, LBIST)</li>
+      </ul>
+    </div>
+    <div class="skill-col">
+      <h3>Languages</h3>
+      <ul>
+        <li>SystemVerilog · Verilog</li>
+        <li>Python · Tcl</li>
+        <li>C · C++ · Java</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="wrap reveal">
+  <h2><span class="sec-num">05</span>Get in touch</h2>
+  <p class="contact-line">
+    Interested in VLSI, silicon validation, or a Dec 2026 grad?
+    <a href="mailto:hg2775@columbia.edu">Email me</a>.
+  </p>
+  <div class="socials">
+    <a href="https://www.linkedin.com/in/hrgopal">LINKEDIN</a>
+    <a href="mailto:hg2775@columbia.edu">EMAIL</a>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span>© 2026 Hariharan Gopal</span>
+  <span>Columbia University · New York</span>
+</footer>
+
+<script>
+  // Scroll-reveal (respects reduced motion via CSS)
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
