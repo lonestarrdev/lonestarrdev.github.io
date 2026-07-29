@@ -93,6 +93,54 @@
   .hero-sub { max-width: 560px; color: var(--muted); font-size: 18px; margin-bottom: 64px; }
   .hero-sub strong { color: var(--text); font-weight: 500; }
 
+  /* Hero layout: text on the left, photo stack on the right (wraps below on narrow viewports) */
+  .hero-top { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 32px 48px; }
+  .hero-main { flex: 1 1 420px; min-width: 0; }
+
+  /* Intro photo stack: two framed photos, one behind the other. Hover brings
+     one to the front; hover long enough and a caption slips out underneath. */
+  .hero-photos { position: relative; width: 210px; height: 232px; flex: 0 0 auto; margin-top: 8px; }
+  .photo-frame {
+    position: absolute;
+    width: 145px;
+    padding: 9px 9px 24px;
+    background: #f2ede2;
+    box-shadow: 0 12px 26px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35);
+    cursor: pointer;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .photo-frame img {
+    display: block; width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .photo-frame--a { top: 0; left: 0; transform: rotate(-7deg); z-index: 2; }
+  .photo-frame--b { top: 36px; left: 58px; transform: rotate(6deg); z-index: 1; }
+  .photo-frame:hover, .photo-frame:focus-visible {
+    z-index: 5;
+    transform: rotate(0deg) scale(1.08) translateY(-6px);
+    box-shadow: 0 20px 36px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4);
+  }
+  .photo-egg {
+    position: absolute; left: 50%; bottom: -10px;
+    transform: translate(-50%, 100%);
+    width: max-content; max-width: 190px;
+    text-align: center;
+    font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.4;
+    color: var(--fun);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    border: 1px solid var(--line-solid);
+    border-radius: 6px;
+    padding: 7px 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .photo-frame:hover .photo-egg, .photo-frame:focus-visible .photo-egg {
+    opacity: 1;
+    transition-delay: 1.4s;
+  }
+
   /* Dotted-leader index: the signature */
   .index { max-width: 560px; }
   .index a {
@@ -307,6 +355,10 @@
   @media (max-width: 720px) {
     .wrap { padding: 0 20px; }
     header { padding: 64px 0 50px; }
+    .hero-top { flex-direction: column-reverse; gap: 36px; }
+    .hero-photos { width: 170px; height: 188px; }
+    .photo-frame { width: 118px; padding: 7px 7px 20px; }
+    .photo-frame--b { top: 28px; left: 46px; }
     .about-grid, .projects, .skills-grid, .card-gallery { grid-template-columns: 1fr; }
     .about-grid { gap: 40px; }
     .job { grid-template-columns: 1fr; gap: 6px; padding: 24px 0; }
@@ -341,6 +393,7 @@
   /* Touch devices can't hover-and-wait: surface the RTL link immediately */
   @media (hover: none) {
     .rtl-peek { opacity: 1; transform: none; pointer-events: auto; animation: none; transition: none; }
+    .photo-frame:active { z-index: 5; transform: rotate(0deg) scale(1.06); }
   }
 </style>
 </head>
@@ -361,20 +414,35 @@
 </nav>
 
 <header class="wrap">
-  <p class="eyebrow">vlsi · physical design · post-silicon validation</p>
-  <h1>hi. i'm Hari.<br>i build <span id="type-word" class="type-word">things</span><span class="cursor" aria-hidden="true"></span>.</h1>
-  <p class="hero-sub">
-    MS EE at <strong>Columbia University</strong>, focused on VLSI. Currently
-    validating 500Gb/s+ optical I/O silicon as a
-    <strong>Post-Silicon Validation Intern at Ayar Labs</strong>.
-  </p>
+  <div class="hero-top">
+    <div class="hero-main">
+      <p class="eyebrow">vlsi · physical design · post-silicon validation</p>
+      <h1>hi. i'm Hari.<br>i build <span id="type-word" class="type-word">things</span><span class="cursor" aria-hidden="true"></span>.</h1>
+      <p class="hero-sub">
+        MS EE at <strong>Columbia University</strong>, focused on VLSI. Currently
+        validating 500Gb/s+ optical I/O silicon as a
+        <strong>Post-Silicon Validation Intern at Ayar Labs</strong>.
+      </p>
 
-  <div class="index" aria-label="Page index">
-    <a href="#about"><span>About me</span><span class="leader"></span><span class="num">01</span></a>
-    <a href="#experience"><span>Where I've worked</span><span class="leader"></span><span class="num">02</span></a>
-    <a href="#projects"><span>Silicon I've built</span><span class="leader"></span><span class="num">03</span></a>
-    <a href="#skills"><span>Tools & flow</span><span class="leader"></span><span class="num">04</span></a>
-    <a href="#contact"><span>Get in touch</span><span class="leader"></span><span class="num">05</span></a>
+      <div class="index" aria-label="Page index">
+        <a href="#about"><span>About me</span><span class="leader"></span><span class="num">01</span></a>
+        <a href="#experience"><span>Where I've worked</span><span class="leader"></span><span class="num">02</span></a>
+        <a href="#projects"><span>Silicon I've built</span><span class="leader"></span><span class="num">03</span></a>
+        <a href="#skills"><span>Tools & flow</span><span class="leader"></span><span class="num">04</span></a>
+        <a href="#contact"><span>Get in touch</span><span class="leader"></span><span class="num">05</span></a>
+      </div>
+    </div>
+
+    <div class="hero-photos">
+      <figure class="photo-frame photo-frame--a" tabindex="0">
+        <img src="assets/intro-1.jpg" alt="Looking up at the painted ceiling fresco in the Vatican's Gallery of Maps" loading="lazy">
+        <span class="photo-egg">gallery of maps, vatican, aurafarming: credit to @gautham.jey</span>
+      </figure>
+      <figure class="photo-frame photo-frame--b" tabindex="0">
+        <img src="assets/intro-2.jpg" alt="Standing in front of the Colosseum in Rome" loading="lazy">
+        <span class="photo-egg">the colosseum, rome, big circle was cool!/span>
+      </figure>
+    </div>
   </div>
 </header>
 
