@@ -149,6 +149,7 @@
   /* Projects */
   .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .card {
+    position: relative;
     background: var(--surface);
     border: 1px solid var(--line-solid);
     padding: 30px;
@@ -156,6 +157,50 @@
     transition: border-color 0.25s, transform 0.25s;
   }
   .card:hover { border-color: var(--brass-dim); transform: translateY(-3px); }
+  .card-link { display: contents; color: inherit; text-decoration: none; }
+
+  /* RTL peek: ghost link that reveals itself on sustained hover */
+  .rtl-peek {
+    position: absolute; top: 16px; right: 16px; z-index: 2;
+    display: flex; align-items: center; gap: 6px;
+    background: color-mix(in srgb, var(--surface) 90%, transparent);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--brass-dim);
+    color: var(--brass);
+    font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.04em;
+    padding: 7px 13px; border-radius: 100px;
+    opacity: 0; transform: translateY(-2px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover .rtl-peek {
+    opacity: 1; transform: translateY(0);
+    pointer-events: auto;
+    transition-delay: 0.7s;
+    animation: peek-shake 0.4s ease 0.7s;
+  }
+  @keyframes peek-shake {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    25% { transform: translateY(0) rotate(-3deg); }
+    75% { transform: translateY(0) rotate(3deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rtl-peek { transition-delay: 0s; animation: none; }
+  }
+
+  /* Terminal-chrome header for RTL-only cards without a photo */
+  .card-terminal {
+    width: calc(100% + 60px);
+    margin: -30px -30px 8px -30px;
+    padding: 14px 20px;
+    background: #0a0c10;
+    border-bottom: 1px solid var(--line-solid);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-terminal .dots { display: flex; gap: 5px; }
+  .card-terminal .dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--line-solid); }
+  .card-terminal .fname { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
+
   .card-img {
     width: calc(100% + 60px);
     margin: -30px 0 8px -30px;
@@ -250,6 +295,8 @@
     .card { padding: 22px; }
     .card-img { width: calc(100% + 44px); margin: -22px 0 8px -22px; }
     .card.wide .card-img { max-height: 220px; }
+    .card-terminal { width: calc(100% + 44px); margin: -22px -22px 8px -22px; }
+    .rtl-peek { top: 12px; right: 12px; font-size: 10px; padding: 6px 11px; }
     .projects { gap: 16px; }
     .skills-grid { gap: 28px; }
     .socials { gap: 20px; }
@@ -265,6 +312,12 @@
     .nav-name { font-size: 12px; }
     .card { padding: 18px; }
     .card-img { width: calc(100% + 36px); margin: -18px 0 8px -18px; }
+    .card-terminal { width: calc(100% + 36px); margin: -18px -18px 8px -18px; }
+  }
+
+  /* Touch devices can't hover-and-wait: surface the RTL link immediately */
+  @media (hover: none) {
+    .rtl-peek { opacity: 1; transform: none; pointer-events: auto; animation: none; transition: none; }
   }
 </style>
 </head>
@@ -305,16 +358,16 @@
   <h2><span class="sec-num">01</span>About me</h2>
   <div class="about-grid">
     <div>
-      <p>I'm a chip designer who likes owning the whole journey: architecting
-      RTL, pushing it through synthesis and place-and-route, closing timing,
-      and then standing at the bench validating the silicon that comes back.
+      <p>I'm a chip designer who's kinda been through the whole journey: building
+      RTL, pushing it through synthesis and PnR, closing timing,
+      and then standing at the bench validating the silicon that comes back. That part's fun.
       My work spans the full RTL-to-GDSII flow with DRC/LVS-clean tapeouts
       in TSMC N65, and hands-on optoelectronic test infrastructure for
       cutting-edge optical interconnects.</p>
       <p>I completed my BS in Electrical Engineering with Honors at the
       University of Illinois Urbana-Champaign, and I'm now finishing my MS at
       Columbia with coursework in VLSI Design, Advanced Digital Design,
-      Analog-Digital Circuits, and Digital Systems.</p>
+      Analog-Digital Circuits, and Digital Systems. (And yes, I like New York better.)</p>
     </div>
     <dl class="facts">
       <dt>Currently</dt><dd>Post-Silicon Validation Intern, Ayar Labs</dd>
@@ -363,33 +416,19 @@
   <h2><span class="sec-num">03</span>Silicon I've built</h2>
   <div class="projects">
 
-    <a class="card wide" href="#">
-      <img class="card-img fit" src="assets/fft-top-level.png" alt="Top-level post-APR layout of the 1024-point FFT engine showing the SRAM banks and standard-cell logic" loading="lazy">
-      <span class="img-note">Top-level layout: SRAM ping-pong banks flanking the logic spine (TSMC N65)</span>
-      <h3>1024-Point FFT Engine: RTL to DRC/LVS-Clean Sign-off</h3>
-      <span class="stat">208.7 MHz post-APR · 0.41 mm² · 5.49 pJ/sample · 70.6 dB SQNR</span>
-      <p>Memory-based radix-2 engine in Verilog built around four data SRAMs
-      organized as two complex ping-pong banks: one bank sources each FFT
-      stage while the other receives, letting a single butterfly datapath
-      serve all ten stages (5,120 butterflies per 1024-point frame). Closed
-      all setup/hold violations by adding register staging between the
-      controller/address-generation logic and the memory interface, verified
-      in PrimeTime STA. Post-APR power was signed off with full VCD activity
-      annotation (13,696 of 13,696 nets), and spectral accuracy was
-      validated across ten frames against a floating-point golden model
-      (Q1.15 in, Q9.7 out), holding sub-0.15% NRMSE per frame.</p>
-      <div class="card-gallery">
-        <figure>
-          <img src="assets/fft-mag-phase.png" alt="Magnitude and phase spectrum comparison between the RTL output and floating-point golden model" loading="lazy">
-          <span class="img-note">RTL vs. golden model: magnitude &amp; phase spectra</span>
-        </figure>
-        <figure>
-          <img src="assets/fft-drc-signoff.jpg" alt="Top-level layout with clean DRC results in Cadence Innovus" loading="lazy">
-          <span class="img-note">DRC-clean sign-off: Calibre RVE</span>
-        </figure>
-      </div>
-      <div class="tags"><span>TSMC N65</span><span>Verilog</span><span>Innovus</span><span>PrimeTime</span><span>DRC/LVS clean</span></div>
-    </a>
+    <div class="card wide">
+      <a class="card-link" href="project-fft.html">
+        <img class="card-img fit" src="assets/fft-top-level.png" alt="Top-level post-APR layout of the 1024-point FFT engine showing the SRAM banks and standard-cell logic" loading="lazy">
+        <span class="img-note">Top-level layout: SRAM ping-pong banks flanking the logic spine (TSMC N65)</span>
+        <h3>1024-Point FFT Engine: RTL to DRC/LVS-Clean Sign-off</h3>
+        <span class="stat">208.7 MHz post-APR · 0.41 mm² · 5.49 pJ/sample · 70.6 dB SQNR</span>
+        <p>Memory-based radix-2 engine built around ping-pong SRAM banks and a
+        shared butterfly datapath. DRC/LVS-clean sign-off in TSMC N65. Fun af
+        project to get my hands into PnR!</p>
+        <div class="tags"><span>TSMC N65</span><span>Verilog</span><span>Innovus</span><span>PrimeTime</span><span>DRC/LVS clean</span></div>
+      </a>
+      <a class="rtl-peek" href="rtl-fft.html" target="_blank" rel="noopener">view RTL &#8599;</a>
+    </div>
 
     <a class="card wide" href="#">
       <img class="card-img" src="assets/adder-layout.jpg" alt="Layout of the 8-bit ripple-carry adder chain in Cadence Virtuoso" loading="lazy">
@@ -405,6 +444,20 @@
       tree and a bitslice floorplan; verified with Spectre and PrimeTime
       signoff STA.</p>
       <div class="tags"><span>TSMC N65</span><span>Virtuoso</span><span>Spectre</span><span>Full custom</span></div>
+    </a>
+
+    <a class="card wide" href="rtl-fir.html" target="_blank" rel="noopener">
+      <div class="card-terminal">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="fname">fircore.v</span>
+      </div>
+      <h3>FIR Filter Core</h3>
+      <span class="stat">ALU-driven MAC datapath · coefficient memory · FIFO buffered</span>
+      <p>Configurable FIR filter core in Verilog: an ALU-driven
+      multiply-accumulate datapath backed by coefficient memory, a register
+      file, and FIFO buffering for streaming samples.</p>
+      <div class="tags"><span>Verilog</span><span>RTL</span><span>DSP</span></div>
+      <span class="img-note">Opens RTL source in a new tab ↗</span>
     </a>
 
   </div>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIR Filter Core RTL Source &middot; Hariharan Gopal</title>
+<meta name="description" content="Curated Verilog source for the FIR Filter Core project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0e13;
+    --surface: #13161e;
+    --line-solid: #232732;
+    --text: #e8e6e1;
+    --muted: #8a8f9c;
+    --brass: #c9a96a;
+    --brass-dim: #c9a96a99;
+    --code-comment: #6b7280;
+    --code-string: #8fbc9c;
+    --code-number: #7fa8cc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Instrument Sans', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 2px; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line-solid); }
+  .nav-inner { max-width: 1100px; margin: 0 auto; padding: 18px 24px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .back-link { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); transition: color .2s; }
+  .back-link:hover { color: var(--brass); }
+  .nav-name { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.08em; color: var(--muted); }
+
+  header { padding: 48px 0 32px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brass); margin-bottom: 14px; }
+  h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(32px, 5vw, 46px); margin-bottom: 12px; }
+  header p.desc { color: var(--muted); font-size: 15px; max-width: 620px; }
+
+  .viewer { display: flex; gap: 24px; padding-bottom: 80px; align-items: flex-start; }
+  .file-list { width: 220px; flex-shrink: 0; position: sticky; top: 76px; }
+  .file-group h2 { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brass); margin: 20px 0 8px; font-weight: 400; }
+  .file-group:first-child h2 { margin-top: 0; }
+  .file-btn { display: block; width: 100%; text-align: left; background: none; border: none; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 13px; padding: 7px 10px; margin: 0 0 2px -10px; border-radius: 4px; cursor: pointer; transition: color .15s, background .15s; }
+  .file-btn:hover { color: var(--text); background: var(--surface); }
+  .file-btn.active { color: var(--brass); background: var(--surface); border-left: 2px solid var(--brass); padding-left: 8px; }
+
+  .file-select { display: none; width: 100%; margin-bottom: 20px; background: var(--surface); color: var(--text); border: 1px solid var(--line-solid); font-family: 'Space Mono', monospace; font-size: 13px; padding: 10px 12px; border-radius: 6px; }
+
+  .code-pane { flex: 1; min-width: 0; background: var(--surface); border: 1px solid var(--line-solid); border-radius: 8px; overflow: hidden; }
+  .code-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--line-solid); font-family: 'Space Mono', monospace; font-size: 12px; }
+  .code-header .cur-name { color: var(--text); }
+  .code-header .cur-path { color: var(--muted); margin-left: 10px; }
+  .copy-btn { background: none; border: 1px solid var(--line-solid); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.04em; padding: 5px 12px; border-radius: 100px; cursor: pointer; transition: color .2s, border-color .2s; }
+  .copy-btn:hover { color: var(--brass); border-color: var(--brass-dim); }
+
+  .code-row { display: flex; }
+  .gutter {
+    font-family: 'Space Mono', monospace; font-size: 13px; line-height: 1.65;
+    color: var(--muted); text-align: right; user-select: none;
+    padding: 18px 14px 18px 0; border-right: 1px solid var(--line-solid);
+    white-space: pre;
+  }
+  .code-block {
+    flex: 1; min-width: 0; overflow-x: auto;
+    padding: 18px; margin: 0;
+  }
+  .code-block code {
+    font-family: 'Space Mono', monospace; font-size: 13px; line-height: 1.65;
+    white-space: pre; color: var(--text);
+  }
+  .tok-kw { color: var(--brass); }
+  .tok-comment { color: var(--code-comment); font-style: italic; }
+  .tok-string { color: var(--code-string); }
+  .tok-number { color: var(--code-number); }
+
+  footer { border-top: 1px solid var(--line-solid); padding: 30px 0 40px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+
+  @media (max-width: 820px) {
+    .file-list { display: none; }
+    .file-select { display: block; }
+    .viewer { flex-direction: column; }
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 0 16px; }
+    header { padding: 36px 0 24px; }
+    .code-header { flex-wrap: wrap; gap: 8px; }
+    footer { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="back-link" href="index.html#projects">&larr; back to portfolio</a>
+    <span class="nav-name">H. GOPAL</span>
+  </div>
+</nav>
+
+<header class="wrap">
+  <p class="eyebrow">RTL source &middot; read-only</p>
+  <h1>FIR Filter Core</h1>
+  <p class="desc">Configurable FIR filter core in Verilog: ALU-driven MAC datapath, coefficient memory, register file, and FIFO buffering.</p>
+</header>
+
+<div class="wrap viewer">
+  <aside class="file-list" id="file-list"></aside>
+  <select class="file-select" id="file-select" aria-label="Select RTL file"></select>
+  <div class="code-pane">
+    <div class="code-header">
+      <div><span class="cur-name" id="cur-name"></span><span class="cur-path" id="cur-path"></span></div>
+      <button class="copy-btn" id="copy-btn" type="button">Copy</button>
+    </div>
+    <div class="code-row">
+      <pre class="gutter" id="gutter"></pre>
+      <pre class="code-block"><code id="code-output"></code></pre>
+    </div>
+  </div>
+</div>
+
+<footer class="wrap">
+  <span>&copy; 2026 Hariharan Gopal</span>
+  <span>6 files &middot; Verilog</span>
+</footer>
+
+<script>
+  const FILES = [{"group": "Top", "name": "fircore.v", "path": "rtl_fir/fircore/fircore.v", "code": "`timescale 1ns/1ps\n\nmodule fircore(input wire clk1,input wire clk2,input wire rstn,input wire signed [15:0] din,input wire valid_in,output wire wfull,input wire cload,input wire [5:0] caddr,input wire signed [15:0] cin,output reg signed [15:0] dout,output reg valid_out,output wire sgn,output wire rempty);\n\n  reg [2:0] st;\n  reg [5:0] wptr;\n  reg [5:0] newest;\n  reg [6:0] k;\n\n  wire [15:0] rdata;\n  wire rvalid;\n  wire rd_en;\n  assign rd_en = (st==3'd1); //same thing later\n\n  fifo fifo_0(.wclk(clk1),.rclk(clk2),.rstn(rstn),.wdata(din),.wvalid(valid_in),//fifo start\n.rd_en(rd_en),.wfull(wfull),.rempty(rempty),.rdata(rdata),.rvalid(rvalid));\n\n  wire write_en;\n  wire [5:0] write_addr;\n  wire signed [15:0] write_data;\n  wire signed [15:0] out_data;\n\n  assign write_en=(st==3'd2) & rvalid;\n  assign write_addr=wptr;\n  assign write_data=rdata;\nreg [5:0] read_addr;\nalways @(*) //wire assign for coeffs read addr output for mult\n  begin\n    read_addr = 6'd0;\n    if(st==3'd3)\n      begin\n        read_addr = newest;\n      end\n    else if(st==3'd4 && k<7'd63)\n      begin\n        read_addr = newest - (k + 7'd1);\n      end\n  end\n\n\n  regfile regfile_0(.clk(clk2),.rstn(rstn),.write_en(write_en),.write_addr(write_addr),//regfile start\n.write_data(write_data),.read_addr(read_addr),.out_data(out_data));\n\n  wire signed [15:0] coef_out;\n\nreg [5:0] coef_read_addr;\nalways @(*) //wire assign for coeffs write addr output for mult\n  begin\n    coef_read_addr = 6'd0;\n    if(st==3'd3)\n      begin\n        coef_read_addr = 6'd0;\n      end\n    else if(st==3'd4 && k<7'd63)\n      begin\n        coef_read_addr = k[5:0] + 6'd1;\n      end\n  end\n\n  cmem cmem_0(.clk(clk2),.rstn(rstn),.cload(cload),.caddr(caddr),\n.cin(cin),.coef_read_addr(coef_read_addr),.coef_out(coef_out));\n\n  wire clear;\n  wire enablealu;\n  assign clear=(st==3'd3);\n  assign enablealu=(st==3'd4);\n\n  wire signed [39:0] multout;\n  wire signed [31:0] outall;\n\n  alu alu_0(.clk(clk2),.rstn(rstn),.sample(out_data),.coeff(coef_out),\n.clear(clear),.enablealu(enablealu),.multout(multout),.outall(outall));\n\n  function signed [15:0] overflow;\n    input signed [39:0] x;\n    begin\n      if (x>$signed({1'b0,16'h7FFF})) \n\toverflow=16'sh7FFF;\n      else if (x<$signed({1'b1,16'h8000})) \n\toverflow=16'sh8000;\n      else overflow=x[15:0];\n    end\n  endfunction\n\n  wire signed [39:0] acc_s;\n  assign acc_s=(multout>>>21); //shif tfor oflow\n\n  assign sgn=dout[15];\n\nalways @(posedge clk2 or negedge rstn)//all fsm\n  begin\n    if(!rstn)\n      begin\n        st <= 3'd0;\n        wptr <= 6'd0;\n        newest <= 6'd0;\n        k <= 7'd0;\n        dout <= 16'sd0;\n        valid_out <= 1'b0;\n      end\n    else\n      begin\n        valid_out <= 1'b0;\n        case(st)\n          3'd0:\n            begin\n              if(!rempty)\n                begin\n                  st <= 3'd1;\n                end\n            end\n          3'd1:\n            begin\n              st <= 3'd2;\n            end\n          3'd2:\n            begin\n              if(rvalid)\n                begin\n                  newest <= wptr;\n                  wptr <= wptr + 6'd1;\n                  k <= 7'd0;\n                  st <= 3'd3;\n                end\n              else\n                begin\n                  st <= 3'd0;\n                end\n            end\n          3'd3:\n            begin\n              k <= 7'd0;\n              st <= 3'd4;\n            end\n          3'd4:\n            begin\n              if(k<7'd63)\n                begin\n                  k <= k + 7'd1;\n                  st <= 3'd4;\n                end\n              else\n                begin\n                  st <= 3'd5;\n                end\n            end\n          3'd5:\n            begin\n              dout <= acc_s[15:0];\n              valid_out <= 1'b1;\n              st <= 3'd0;\n            end\n          default:\n            begin\n              st <= 3'd0;\n            end\n        endcase\n      end\n  end\n\n\nendmodule\n\n"}, {"group": "Datapath", "name": "alu.v", "path": "rtl_fir/alu/alu.v", "code": "\nmodule alu #(parameter inwidth = 16, parameter coeffw = 16, parameter prodw = 32, parameter aluw = 40)( input clk, input rstn, input signed [inwidth-1:0] sample, input signed [coeffw-1:0] coeff,\ninput clear, input enablealu, output reg signed [aluw-1:0] multout,output signed [prodw-1:0] outall);\n\n    wire signed [prodw-1:0] mult_res;\n    assign mult_res = $signed(sample) * $signed(coeff);\n\n    wire signed [aluw-1:0] mult_ext;\n\twire x;\n    assign x = mult_res[prodw-1];\n    assign mult_ext = {{(aluw-prodw){x}}, mult_res};\n\n    always @(posedge clk or negedge rstn) \n        begin\n            if (!rstn)\n                multout <= {aluw{1'b0}};\n            else if (clear)\n                multout <= {aluw{1'b0}};\n            else if (enablealu)\n                multout <= multout + mult_ext;\n        end\n\n    assign outall = mult_res;\n\nendmodule\n\n"}, {"group": "Datapath", "name": "regfile.v", "path": "rtl_fir/regfile/regfile.v", "code": "`timescale 1ns/1ps\n\nmodule regfile (input wire clk,input wire rstn,input wire write_en,input wire [5:0] write_addr,input wire signed [15:0] write_data, input wire [5:0] read_addr, output reg  signed [15:0] out_data);\n\n  reg signed [15:0] mem [0:63];\n  integer count;\n\n  always @(negedge rstn or posedge clk) \n    begin\n      if (!rstn) \n        begin\n          for (count = 0; count < 64; count = count + 1)\n            mem[count] <= 16'sd0;\n          out_data <= 16'sd0;\n          end \n      else \n        begin\n          if (write_en)\n            mem[write_addr] <= write_data;\n          out_data <= mem[read_addr];\n        end\n    end\n\nendmodule\n\n"}, {"group": "Memory", "name": "cmem.v", "path": "rtl_fir/cmem/cmem.v", "code": "module cmem (input wire clk,input wire rstn, input wire cload, input wire [5:0] caddr, input wire signed [15:0] cin, input wire [5:0] coef_read_addr,output reg signed [15:0] coef_out);\n  reg signed [15:0] mem [0:63];\n  integer count;\n\n  always @(negedge rstn or posedge clk) \n    begin\n      if (!rstn)\n        begin\n          for (count = 0; count < 64; count = count + 1)\n            mem[count] <= 16'sd0;\n          coef_out <= 16'sd0;\n        end \n      else \n        begin\n          if (cload)\n            mem[caddr] <= cin;\n          coef_out <= mem[coef_read_addr];\n        end\n    end\nendmodule\n\n\n"}, {"group": "Memory", "name": "fifo.v", "path": "rtl_fir/fifo/fifo.v", "code": "`timescale 1ns/1ps\n\nmodule fifo(input wclk, input rclk, input rstn, input[15:0]wdata, input wvalid, input rd_en, output wfull, output rempty, output reg[15:0]rdata, output reg rvalid);\n\n  reg[15:0] mem[0:7];\n  reg[3:0] writeptr_bin, writeptr, readptr_bin, readptr, writeq1_readptr, writeq2_readptr, readq1_writeptr, readq2_writeptr;\n  reg wfull_r, rempty_r;\n\n  wire writeinc, readinc, wfull_n, rempty_n;\n  wire[3:0]writeptr_bin_n, readptr_bin_n, writeptr_n, readptr_n;\n\n  assign writeinc = wvalid && !wfull_r;\n  assign readinc = rd_en && !rempty_r;\n\n  assign writeptr_bin_n = writeptr_bin + {3'b000, writeinc};\n  assign readptr_bin_n = readptr_bin + {3'b000, readinc};\n\n  assign writeptr_n = (writeptr_bin_n >> 1) ^ writeptr_bin_n;\n  assign readptr_n = (readptr_bin_n >> 1) ^ readptr_bin_n;\n\n  assign wfull_n = (writeptr_n == {~writeq2_readptr[3:2], writeq2_readptr[1:0]});\n  assign rempty_n = (readptr_n == readq2_writeptr);\n\n  assign wfull = wfull_r;\n  assign rempty = rempty_r;\n\n  always @(posedge wclk or negedge rstn) \n    begin\n      if(!rstn) \n        begin\n          writeptr_bin <= 4'd0;\n          writeptr <= 4'd0;\n          wfull_r <= 1'b0;\n        end \n      else \n        begin\n          if(writeinc) \n            mem[writeptr_bin[2:0]] <= wdata;\n          writeptr_bin <= writeptr_bin_n;\n          writeptr <= writeptr_n;\n          wfull_r <= wfull_n;\n        end\n    end\n\n  always @(posedge rclk or negedge rstn) \n    begin\n      if(!rstn) \n        begin\n          readptr_bin <= 4'd0;\n          readptr <= 4'd0;\n          rempty_r <= 1'b1;\n          rdata <= 16'd0;\n          rvalid <= 1'b0;\n        end \n      else \n        begin\n          rvalid <= readinc;\n          if(readinc) \n            rdata <= mem[readptr_bin[2:0]];\n          readptr_bin <= readptr_bin_n;\n          readptr <= readptr_n;\n          rempty_r <= rempty_n;\n        end\n    end\n\n  always @(posedge wclk or negedge rstn)\n    begin\n      if(!rstn) \n        begin\n          writeq1_readptr <= 4'd0;\n          writeq2_readptr <= 4'd0;\n        end \n      else \n        begin\n          writeq1_readptr <= readptr;\n          writeq2_readptr <= writeq1_readptr;\n        end\n    end\n\n  always @(posedge rclk or negedge rstn) \n    begin\n      if(!rstn) \n        begin\n          readq1_writeptr <= 4'd0;\n          readq2_writeptr <= 4'd0;\n        end \n      else \n        begin\n          readq1_writeptr <= writeptr;\n          readq2_writeptr <= readq1_writeptr;\n        end\n    end\n\nendmodule\n\n\n\n"}, {"group": "Utility", "name": "lfsr1.v", "path": "rtl_fir/template/lfsr1.v", "code": "`timescale 1ns/1ps\n\nmodule lfsr1 (clk, resetn, seed, lfsr_out);\n\n        input clk, resetn;\n        input [15:0] seed;\n        output [15:0] lfsr_out;\n\n        reg [15:0] lfsr_out;\n\n\twire [15:0] lfsr_next;\n\n        always @(posedge clk) begin\n            if (~resetn) begin\n                lfsr_out <= #0.1 seed;\n            end\n            else begin\n                lfsr_out <= #0.1 lfsr_next;\n            end\n        end\n\n\tassign lfsr_next = {lfsr_out[14:0], lfsr_out[15]^lfsr_out[12]^lfsr_out[5]^lfsr_out[0]};\n\nendmodule\n\n"}];
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function highlightVerilog(src) {
+    let code = escapeHtml(src);
+    const tokens = [];
+    const stash = (html) => { tokens.push(html); return '\u0000' + (tokens.length - 1) + '\u0000'; };
+
+    code = code.replace(/(\/\/[^\n]*)|(\/\*[\s\S]*?\*\/)/g, m => stash('<span class="tok-comment">' + m + '</span>'));
+    code = code.replace(/&quot;(?:[^&\\]|\\.)*&quot;/g, m => stash('<span class="tok-string">' + m + '</span>'));
+    code = code.replace(/\b\d+'[bBhHdDoO][0-9a-fA-Fxz_XZ]+|\b\d+\.\d+\b|\b\d+\b/g, m => stash('<span class="tok-number">' + m + '</span>'));
+
+    const keywords = ['module','endmodule','input','output','inout','wire','reg','logic','parameter','localparam',
+      'always','always_ff','always_comb','always_latch','begin','end','if','else','case','casex','casez','endcase',
+      'default','assign','function','endfunction','task','endtask','posedge','negedge','or','and','not','xor',
+      'generate','endgenerate','genvar','for','while','integer','signed','unsigned','initial','typedef','struct',
+      'enum','packed','timescale','define'];
+    const kwRe = new RegExp('\\b(' + keywords.join('|') + ')\\b', 'g');
+    code = code.replace(kwRe, '<span class="tok-kw">$1</span>');
+
+    code = code.replace(/\u0000(\d+)\u0000/g, (_, i) => tokens[Number(i)]);
+    return code;
+  }
+
+  const fileListEl = document.getElementById('file-list');
+  const fileSelectEl = document.getElementById('file-select');
+  const curNameEl = document.getElementById('cur-name');
+  const curPathEl = document.getElementById('cur-path');
+  const gutterEl = document.getElementById('gutter');
+  const codeOutEl = document.getElementById('code-output');
+  const copyBtn = document.getElementById('copy-btn');
+
+  const groups = [];
+  FILES.forEach((f, i) => {
+    let g = groups.find(g => g.name === f.group);
+    if (!g) { g = { name: f.group, items: [] }; groups.push(g); }
+    g.items.push(i);
+  });
+
+  groups.forEach(g => {
+    const wrap = document.createElement('div');
+    wrap.className = 'file-group';
+    const h2 = document.createElement('h2');
+    h2.textContent = g.name;
+    wrap.appendChild(h2);
+    g.items.forEach(i => {
+      const btn = document.createElement('button');
+      btn.className = 'file-btn';
+      btn.type = 'button';
+      btn.textContent = FILES[i].name;
+      btn.dataset.index = i;
+      btn.addEventListener('click', () => selectFile(i));
+      wrap.appendChild(btn);
+    });
+    fileListEl.appendChild(wrap);
+  });
+
+  FILES.forEach((f, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = f.group + ' / ' + f.name;
+    fileSelectEl.appendChild(opt);
+  });
+  fileSelectEl.addEventListener('change', () => selectFile(Number(fileSelectEl.value)));
+
+  let currentIndex = 0;
+
+  function selectFile(i) {
+    currentIndex = i;
+    const f = FILES[i];
+    curNameEl.textContent = f.name;
+    curPathEl.textContent = f.path;
+    codeOutEl.innerHTML = highlightVerilog(f.code);
+    const lineCount = f.code.split('\n').length;
+    gutterEl.textContent = Array.from({ length: lineCount }, (_, n) => n + 1).join('\n');
+    fileListEl.querySelectorAll('.file-btn').forEach(b => b.classList.toggle('active', Number(b.dataset.index) === i));
+    fileSelectEl.value = i;
+  }
+
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(FILES[currentIndex].code);
+      copyBtn.textContent = 'Copied';
+      setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1400);
+    } catch (e) {
+      copyBtn.textContent = 'Failed';
+      setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1400);
+    }
+  });
+
+  selectFile(0);
+</script>
+
+</body>
+</html>
